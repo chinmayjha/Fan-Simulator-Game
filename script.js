@@ -4,6 +4,7 @@ let fanBroken = false;
 let repairing = false;
 let allowHoldRepair = false;
 let isHolding = false;
+let repairTimeout;
 
 const fanElement = document.getElementById("fanContainer");
 const popup = document.getElementById("popup");
@@ -78,48 +79,50 @@ function startManualRepair() {
   showPopup("Now hold the fan to repair...");
 }
 
-// Handle hold for both mouse and touch devices
-fanElement.addEventListener("mousedown", startHoldRepair);
-fanElement.addEventListener("touchstart", startHoldRepair);
+// 🛠️ FIXED: Hold-to-Repair logic (works on both desktop and mobile)
 
-fanElement.addEventListener("mouseup", stopHoldRepair);
-fanElement.addEventListener("mouseleave", stopHoldRepair);
-fanElement.addEventListener("touchend", stopHoldRepair);
-fanElement.addEventListener("touchcancel", stopHoldRepair);
+fanElement.addEventListener("mousedown", startHoldTimer);
+fanElement.addEventListener("mouseup", cancelHoldTimer);
+fanElement.addEventListener("mouseleave", cancelHoldTimer);
 
-function startHoldRepair(event) {
+fanElement.addEventListener("touchstart", startHoldTimer, { passive: false });
+fanElement.addEventListener("touchend", cancelHoldTimer);
+fanElement.addEventListener("touchcancel", cancelHoldTimer);
+
+function startHoldTimer(event) {
   if (!fanBroken || !allowHoldRepair || repairing) return;
 
+  event.preventDefault(); // prevents scroll on touch
   isHolding = true;
   repairing = true;
+
   document.getElementById("repairSound").play();
-  const repairStartTime = Date.now();
 
-  const interval = setInterval(() => {
-    if (!isHolding) {
-      clearInterval(interval);
-      document.getElementById("repairSound").pause();
-      document.getElementById("repairSound").currentTime = 0;
-      repairing = false;
+  repairTimeout = setTimeout(() => {
+    if (isHolding) {
+      completeRepair();
     }
-
-    const heldDuration = Date.now() - repairStartTime;
-    if (heldDuration >= 5000) {
-      clearInterval(interval);
-      document.getElementById("repairSound").pause();
-      document.getElementById("repairSound").currentTime = 0;
-      document.getElementById("repairSuccess").play();
-      fanBroken = false;
-      allowHoldRepair = false;
-      repairing = false;
-      hidePopup();
-    }
-  }, 100);
-
-  // Prevent scroll while touching
-  event.preventDefault();
+  }, 5000); // 5 seconds hold
 }
 
-function stopHoldRepair() {
+function cancelHoldTimer() {
+  if (!repairing) return;
   isHolding = false;
+  repairing = false;
+  clearTimeout(repairTimeout);
+
+  document.getElementById("repairSound").pause();
+  document.getElementById("repairSound").currentTime = 0;
+}
+
+function completeRepair() {
+  isHolding = false;
+  repairing = false;
+  allowHoldRepair = false;
+
+  document.getElementById("repairSound").pause();
+  document.getElementById("repairSound").currentTime = 0;
+  document.getElementById("repairSuccess").play();
+  fanBroken = false;
+  hidePopup();
 }
