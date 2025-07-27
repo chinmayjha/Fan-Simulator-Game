@@ -45,6 +45,7 @@ h1 {
   height: 100%;
   transform: translate(-50%, -50%);
   transform-origin: center;
+  user-drag: none;
 }
 
 .blade {
