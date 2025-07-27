@@ -4,7 +4,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
   font-family: "Quicksand", sans-serif;
@@ -34,7 +35,6 @@ h1 {
   width: 220px;
   height: 220px;
   cursor: pointer;
-  touch-action: none;
 }
 
 .fan-blades {
@@ -45,7 +45,6 @@ h1 {
   height: 100%;
   transform: translate(-50%, -50%);
   transform-origin: center;
-  user-drag: none;
 }
 
 .blade {
@@ -59,27 +58,17 @@ h1 {
   transform-origin: left center;
 }
 
-.blade1 {
-  transform: rotate(0deg);
-}
-.blade2 {
-  transform: rotate(120deg);
-}
-.blade3 {
-  transform: rotate(240deg);
-}
+.blade1 { transform: rotate(0deg); }
+.blade2 { transform: rotate(120deg); }
+.blade3 { transform: rotate(240deg); }
 
 .spin .fan-blades {
   animation: spinBlades 1s linear infinite;
 }
 
 @keyframes spinBlades {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .fan-motor {
@@ -104,8 +93,6 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: none;
   z-index: 10;
-  width: 90%;
-  max-width: 300px;
 }
 
 .popup-buttons {
@@ -113,17 +100,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.hold-area {
-  margin-top: 15px;
-  padding: 15px;
-  background-color: #1e40af;
-  color: white;
-  font-weight: 600;
-  border-radius: 10px;
-  user-select: none;
-  touch-action: none;
 }
 
 button {
