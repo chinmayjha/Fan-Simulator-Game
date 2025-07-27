@@ -47,6 +47,10 @@ function showPopup(message, withButtons = false) {
         <button onclick="coinRepair()">Pay 10 Coins</button>
       </div>
     `;
+  } else if (message === "Now hold the fan to repair...") {
+    popup.innerHTML += `
+      <div id="holdArea" class="hold-area">Touch and hold here to repair</div>
+    `;
   }
   popup.style.display = "block";
 }
@@ -77,40 +81,40 @@ function coinRepair() {
 function startManualRepair() {
   allowHoldRepair = true;
   showPopup("Now hold the fan to repair...");
+
+  setTimeout(() => {
+    const holdArea = document.getElementById("holdArea");
+    if (!holdArea) return;
+
+    holdArea.addEventListener("mousedown", handleHoldStart);
+    holdArea.addEventListener("mouseup", handleHoldEnd);
+    holdArea.addEventListener("mouseleave", handleHoldEnd);
+
+    holdArea.addEventListener("touchstart", handleHoldStart, { passive: false });
+    holdArea.addEventListener("touchend", handleHoldEnd);
+    holdArea.addEventListener("touchcancel", handleHoldEnd);
+  }, 100);
 }
 
-// 🛠️ FIXED: Hold-to-Repair logic (works on both desktop and mobile)
-
-fanElement.addEventListener("mousedown", startHoldTimer);
-fanElement.addEventListener("mouseup", cancelHoldTimer);
-fanElement.addEventListener("mouseleave", cancelHoldTimer);
-
-fanElement.addEventListener("touchstart", startHoldTimer, { passive: false });
-fanElement.addEventListener("touchend", cancelHoldTimer);
-fanElement.addEventListener("touchcancel", cancelHoldTimer);
-
-function startHoldTimer(event) {
-  if (!fanBroken || !allowHoldRepair || repairing) return;
-
-  event.preventDefault(); // prevents scroll on touch
+function handleHoldStart(e) {
+  if (repairing) return;
+  e.preventDefault();
   isHolding = true;
   repairing = true;
-
   document.getElementById("repairSound").play();
 
   repairTimeout = setTimeout(() => {
     if (isHolding) {
       completeRepair();
     }
-  }, 5000); // 5 seconds hold
+  }, 5000);
 }
 
-function cancelHoldTimer() {
+function handleHoldEnd() {
   if (!repairing) return;
   isHolding = false;
   repairing = false;
   clearTimeout(repairTimeout);
-
   document.getElementById("repairSound").pause();
   document.getElementById("repairSound").currentTime = 0;
 }
