@@ -1,25 +1,21 @@
-/* GENERAL RESET AND LAYOUT */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html,
-body {
+html, body {
   height: 100%;
-  overflow: hidden; /* Prevent scroll */
+  overflow: hidden;
   font-family: "Quicksand", sans-serif;
   background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
 }
 
-/* MAIN WRAPPER */
 .main-wrapper {
   height: 100vh;
   padding: 20px;
 }
 
-/* TITLE */
 h1 {
   color: #0f172a;
   font-size: 2.8rem;
@@ -27,19 +23,18 @@ h1 {
   margin-bottom: 1.2rem;
 }
 
-/* COUNTERS */
 .stats-row {
   font-size: 1.1rem;
   font-weight: 600;
   color: #1f2937;
 }
 
-/* FAN CONTAINER */
 .fan-container {
   position: relative;
   width: 220px;
   height: 220px;
   cursor: pointer;
+  touch-action: none;
 }
 
 .fan-blades {
@@ -86,7 +81,6 @@ h1 {
   }
 }
 
-/* FAN MOTOR */
 .fan-motor {
   position: absolute;
   top: 53%;
@@ -99,7 +93,6 @@ h1 {
   z-index: 2;
 }
 
-/* POPUP */
 .popup {
   position: absolute;
   top: 10px;
@@ -110,6 +103,8 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: none;
   z-index: 10;
+  width: 90%;
+  max-width: 300px;
 }
 
 .popup-buttons {
@@ -119,7 +114,17 @@ h1 {
   gap: 10px;
 }
 
-/* BUTTON */
+.hold-area {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #1e40af;
+  color: white;
+  font-weight: 600;
+  border-radius: 10px;
+  user-select: none;
+  touch-action: none;
+}
+
 button {
   padding: 8px;
   border: none;
@@ -130,7 +135,6 @@ button {
   font-weight: 600;
 }
 
-/* HEART TOOLTIP */
 .heart {
   position: relative;
   display: inline-block;
@@ -151,7 +155,6 @@ button {
   white-space: nowrap;
 }
 
-/* FOOTER */
 footer {
   font-size: 1rem;
   color: #1f2937;
@@ -167,7 +170,6 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* RESPONSIVE FAN */
 @media (max-width: 576px) {
   h1 {
     font-size: 2rem;
