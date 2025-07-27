@@ -41,11 +41,11 @@ function showPopup(message, withButtons = false) {
   popup.innerHTML = `<p>${message}</p>`;
   if (withButtons) {
     popup.innerHTML += `
-          <div class="popup-buttons">
-            <button onclick="startManualRepair()">Hold to Repair</button>
-            <button onclick="coinRepair()">Pay 10 Coins</button>
-          </div>
-        `;
+      <div class="popup-buttons">
+        <button onclick="startManualRepair()">Hold to Repair</button>
+        <button onclick="coinRepair()">Pay 10 Coins</button>
+      </div>
+    `;
   }
   popup.style.display = "block";
 }
@@ -78,13 +78,22 @@ function startManualRepair() {
   showPopup("Now hold the fan to repair...");
 }
 
-fanElement.addEventListener("mousedown", () => {
+// Handle hold for both mouse and touch devices
+fanElement.addEventListener("mousedown", startHoldRepair);
+fanElement.addEventListener("touchstart", startHoldRepair);
+
+fanElement.addEventListener("mouseup", stopHoldRepair);
+fanElement.addEventListener("mouseleave", stopHoldRepair);
+fanElement.addEventListener("touchend", stopHoldRepair);
+fanElement.addEventListener("touchcancel", stopHoldRepair);
+
+function startHoldRepair(event) {
   if (!fanBroken || !allowHoldRepair || repairing) return;
 
   isHolding = true;
   repairing = true;
   document.getElementById("repairSound").play();
-  let repairStartTime = Date.now();
+  const repairStartTime = Date.now();
 
   const interval = setInterval(() => {
     if (!isHolding) {
@@ -106,12 +115,11 @@ fanElement.addEventListener("mousedown", () => {
       hidePopup();
     }
   }, 100);
-});
 
-fanElement.addEventListener("mouseup", () => {
-  isHolding = false;
-});
+  // Prevent scroll while touching
+  event.preventDefault();
+}
 
-fanElement.addEventListener("mouseleave", () => {
+function stopHoldRepair() {
   isHolding = false;
-});
+}
