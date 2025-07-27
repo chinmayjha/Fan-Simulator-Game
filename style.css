@@ -1,0 +1,190 @@
+/* GENERAL RESET AND LAYOUT */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* Prevent scroll */
+  font-family: "Quicksand", sans-serif;
+  background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+}
+
+/* MAIN WRAPPER */
+.main-wrapper {
+  height: 100vh;
+  padding: 20px;
+}
+
+/* TITLE */
+h1 {
+  color: #0f172a;
+  font-size: 2.8rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+
+/* COUNTERS */
+.stats-row {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* FAN CONTAINER */
+.fan-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  cursor: pointer;
+}
+
+.fan-blades {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+.blade {
+  position: absolute;
+  width: 80px;
+  height: 20px;
+  background: #5e5959;
+  border-radius: 20px 80px 80px 20px;
+  top: 50%;
+  left: 50%;
+  transform-origin: left center;
+}
+
+.blade1 {
+  transform: rotate(0deg);
+}
+.blade2 {
+  transform: rotate(120deg);
+}
+.blade3 {
+  transform: rotate(240deg);
+}
+
+.spin .fan-blades {
+  animation: spinBlades 1s linear infinite;
+}
+
+@keyframes spinBlades {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* FAN MOTOR */
+.fan-motor {
+  position: absolute;
+  top: 53%;
+  left: 49%;
+  width: 50px;
+  height: 50px;
+  background-color: #0f172a;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* POPUP */
+.popup {
+  position: absolute;
+  top: 10px;
+  background: #fef3c7;
+  color: #111827;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 10;
+}
+
+.popup-buttons {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BUTTON */
+button {
+  padding: 8px;
+  border: none;
+  background-color: #1d4ed8;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* HEART TOOLTIP */
+.heart {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.heart:hover::after {
+  content: "love";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: salmon;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* FOOTER */
+footer {
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+footer a {
+  color: #1d4ed8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE FAN */
+@media (max-width: 576px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .fan-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  .blade {
+    width: 60px;
+    height: 18px;
+  }
+
+  .fan-motor {
+    width: 45px;
+    height: 45px;
+  }
+}
