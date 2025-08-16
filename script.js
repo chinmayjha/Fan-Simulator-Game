@@ -2,13 +2,11 @@
 const REPAIR_DURATION = 3000; // ms
 const WARN_CHANCE = 0.2; // 20% warning chance
 
-// Progressive break system
-let breakChance = 0.05; // start 5%
-const BREAK_INCREMENT = 0.05; // +5% per safe spin
-const MAX_BREAK_CHANCE = 0.35; // cap 35%
+// Breaking system: at least 1 break every 10 spins
+let spinsSinceLastBreak = 0;
 
 // state
-let coins = 0;
+let coins = Number(localStorage.getItem('coins')) || 0;
 let totalRotations = Number(localStorage.getItem('rotations')) || 0;
 let fanBroken = false;
 let repairing = false;
@@ -47,6 +45,7 @@ fanContainer.addEventListener('click', () => {
   rotationCountEl.innerText = totalRotations;
 
   coins++;
+  localStorage.setItem('coins', coins);
   coinCountEl.innerText = coins;
 
   // spin animation + sound
@@ -58,18 +57,29 @@ fanContainer.addEventListener('click', () => {
     fanSound.pause();
   }, 900);
 
-  // --- Progressive Break Logic ---
+  // --- Break Logic ---
   if (totalRotations > 3) {
-    if (Math.random() < breakChance) {
+    spinsSinceLastBreak++;
+
+    let shouldBreak = false;
+
+    // Force break if 10 spins passed
+    if (spinsSinceLastBreak >= 10) {
+      shouldBreak = true;
+    } else {
+      // Otherwise random chance (e.g., 15%)
+      if (Math.random() < 0.15) {
+        shouldBreak = true;
+      }
+    }
+
+    if (shouldBreak) {
       fanBroken = true;
       vibrate(160);
       showPopup('⚠️ Fan is broken!', true);
-      breakChance = 0.05; // reset chance after break
+      spinsSinceLastBreak = 0; // reset counter
     } else {
-      // Safe spin → increase break chance
-      breakChance = Math.min(MAX_BREAK_CHANCE, breakChance + BREAK_INCREMENT);
-
-      // Random warning
+      // Occasional warning
       if (Math.random() < WARN_CHANCE) {
         vibrate(80);
         showPopup('⚠️ Warning! Fan is getting weaker.', false);
@@ -105,6 +115,7 @@ function coinRepair(e) {
   if (repairing) return;
   if (coins >= 10) {
     coins -= 10;
+    localStorage.setItem('coins', coins);
     coinCountEl.innerText = coins;
     vibrate([60, 30, 60]);
     startAutoRepair(REPAIR_DURATION);
