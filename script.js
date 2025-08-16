@@ -1,7 +1,11 @@
 // GAME SETTINGS
 const REPAIR_DURATION = 3000; // ms
-const BREAK_CHANCE = 0.2; // 20%
-const WARN_CHANCE = 0.15; // 15%
+const WARN_CHANCE = 0.2; // 20% warning chance
+
+// Progressive break system
+let breakChance = 0.05; // start 5%
+const BREAK_INCREMENT = 0.05; // +5% per safe spin
+const MAX_BREAK_CHANCE = 0.35; // cap 35%
 
 // state
 let coins = 0;
@@ -54,16 +58,23 @@ fanContainer.addEventListener('click', () => {
     fanSound.pause();
   }, 900);
 
-  // BREAKING LOGIC (skip first 3 rotations)
+  // --- Progressive Break Logic ---
   if (totalRotations > 3) {
-    if (Math.random() < BREAK_CHANCE) {
+    if (Math.random() < breakChance) {
       fanBroken = true;
       vibrate(160);
       showPopup('⚠️ Fan is broken!', true);
-    } else if (Math.random() < WARN_CHANCE) {
-      vibrate(80);
-      showPopup('⚠️ Warning! Fan is getting weaker.', false);
-      setTimeout(() => { if (!fanBroken) hidePopup(); }, 1800);
+      breakChance = 0.05; // reset chance after break
+    } else {
+      // Safe spin → increase break chance
+      breakChance = Math.min(MAX_BREAK_CHANCE, breakChance + BREAK_INCREMENT);
+
+      // Random warning
+      if (Math.random() < WARN_CHANCE) {
+        vibrate(80);
+        showPopup('⚠️ Warning! Fan is getting weaker.', false);
+        setTimeout(() => { if (!fanBroken) hidePopup(); }, 1800);
+      }
     }
   }
 });
