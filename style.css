@@ -1,186 +1,154 @@
-   :root{
-      --repair-duration: 3000ms; /* displayed for reference, actual JS uses 3000ms */
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: "Quicksand", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: linear-gradient(to bottom right,#f8fafc,#e2e8f0);
-      margin: 0;
-    }
+:root {
+  --repair-duration: 3000ms;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: "Quicksand", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg,#f8fafc,#e2e8f0);
+  margin: 0;
+}
 
-    /* header + HUD */
-    header { padding: 1.25rem 1rem 0.5rem; }
-    header .title { font-size: 1.75rem; font-weight:700; color:#0f172a; text-align:center; }
-    .hud {
-      display:flex;
-      gap: 1rem;
-      justify-content:center;
-      margin-top:0.75rem;
-      color:#374151;
-      font-weight:600;
-    }
-    .hud .chip {
-      background: rgba(255,255,255,0.9);
-      padding: .35rem .75rem;
-      border-radius: .5rem;
-      box-shadow: 0 4px 12px rgba(2,6,23,0.06);
-      font-size: .95rem;
-    }
+/* Header + HUD */
+.title { font-size: 2rem; font-weight:700; color:#0f172a; }
+.hud .chip {
+  background: rgba(255,255,255,0.9);
+  padding: .35rem .75rem;
+  border-radius: .5rem;
+  box-shadow: 0 4px 12px rgba(2,6,23,0.06);
+  font-size: 1rem;
+  font-weight:600;
+  color:#374151;
+}
 
-    /* main / fan area */
-    main{ flex:1; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
-    .fan-card {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 1.75rem;
-      box-shadow: 0 8px 28px rgba(2,6,23,0.06);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+/* Fan card */
+.fan-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  box-shadow: 0 8px 28px rgba(2,6,23,0.06);
+}
 
-    .fan-container{
-      position: relative;
-      width: 260px;
-      height: 260px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-    }
+/* Fan structure */
+.fan-container{
+  position: relative;
+  width: 260px;
+  height: 260px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.fan-blades{
+  position:absolute;
+  top:50%; left:50%;
+  width:100%; height:100%;
+  transform: translate(-50%,-50%);
+  transform-origin: center;
+}
+.blade{
+  position:absolute;
+  width:95px; height:24px;
+  background:#5e5959;
+  border-radius:22px 88px 88px 22px;
+  top:50%; left:50%;
+  transform-origin: left center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08) inset;
+}
+.blade1{ transform: rotate(0deg); }
+.blade2{ transform: rotate(120deg); }
+.blade3{ transform: rotate(240deg); }
 
-    .fan-blades{
-      position:absolute;
-      top:50%; left:50%;
-      width:100%; height:100%;
-      transform: translate(-50%,-50%);
-      transform-origin: center;
-    }
+.spin .fan-blades { animation: spinBlades 900ms linear infinite; }
+@keyframes spinBlades {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
 
-    .blade{
-      position:absolute;
-      width:95px; height:24px;
-      background:#5e5959;
-      border-radius:22px 88px 88px 22px;
-      top:50%; left:50%;
-      transform-origin: left center;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08) inset;
-    }
-    .blade1{ transform: rotate(0deg); }
-    .blade2{ transform: rotate(120deg); }
-    .blade3{ transform: rotate(240deg); }
+/* Repairing wobble */
+.repairing .fan-blades,
+.repairing .fan-motor {
+  animation: wobble 180ms ease-in-out infinite;
+}
+@keyframes wobble {
+  0% { transform: translate(-50%,-50%) rotate(-1.2deg); }
+  50% { transform: translate(-50%,-50%) rotate(1.2deg); }
+  100% { transform: translate(-50%,-50%) rotate(-1.2deg); }
+}
 
-    .spin .fan-blades { animation: spinBlades 900ms linear infinite; }
-    @keyframes spinBlades {
-      0% { transform: translate(-50%,-50%) rotate(0deg); }
-      100% { transform: translate(-50%,-50%) rotate(360deg); }
-    }
+.fan-motor{
+  position:absolute; width:62px; height:62px;
+  top:53%; left:49%;
+  transform: translate(-50%,-50%);
+  background: #0f172a; border-radius:50%;
+  z-index:3;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.12);
+}
 
-    /* wobble while repairing */
-    .repairing .fan-blades,
-    .repairing .fan-motor {
-      animation: wobble 180ms ease-in-out infinite;
-    }
-    @keyframes wobble {
-      0% { transform: translate(-50%,-50%) rotate(-1.2deg); }
-      50% { transform: translate(-50%,-50%) rotate(1.2deg); }
-      100% { transform: translate(-50%,-50%) rotate(-1.2deg); }
-    }
+/* Popup */
+.popup {
+  position: absolute;
+  top: -110px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  background: #fff7d6;
+  color: #111827;
+  padding: .85rem .9rem;
+  border-radius: .75rem;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+  display:none;
+  z-index: 50;
+  text-align:center;
+  pointer-events: auto;
+}
+.popup p{ margin:0; font-weight:700; }
+.popup .popup-buttons { margin-top:.6rem; display:flex; gap:.5rem; flex-direction:column; }
+.btn-repair { background:#1d4ed8; color:#fff; border:none; padding:.5rem; border-radius:.5rem; font-weight:700; }
+.btn-hold { background:#10b981; color:#fff; border:none; padding:.5rem; border-radius:.5rem; font-weight:700; }
 
-    .fan-motor{
-      position:absolute; width:62px; height:62px;
-      top:53%; left:49%;
-      transform: translate(-50%,-50%);
-      background: #0f172a; border-radius:50%;
-      z-index:3;
-      box-shadow: 0 8px 20px rgba(2,6,23,0.12);
-    }
+/* Footer */
+footer { font-size:.95rem; color:#374151; }
+.love-hover { position: relative; display:inline-block; margin:0 .25rem; }
+.love-hover .love-bubble {
+  position: absolute;
+  bottom: 140%;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: #ffcdd2;
+  color: #111;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight:700;
+  font-size:.85rem;
+  opacity: 0;
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.love-hover:hover .love-bubble {
+  opacity:1;
+  transform: translateX(-50%) translateY(0);
+}
 
-    /* popup - placed above fan visually, but it's outside fan click propagation */
-    .popup {
-      position: absolute;
-      top: -110px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 260px;
-      background: #fff7d6;
-      color: #111827;
-      padding: .85rem .9rem;
-      border-radius: .75rem;
-      box-shadow: 0 10px 30px rgba(2,6,23,0.12);
-      display:none;
-      z-index: 50;
-      text-align:center;
-      pointer-events: auto;
-    }
-    .popup p{ margin:0; font-weight:700; }
-    .popup .popup-buttons { margin-top:.6rem; display:flex; gap:.5rem; flex-direction:column; }
-    .btn-repair { background:#1d4ed8; color:#fff; border:none; padding:.5rem; border-radius:.5rem; font-weight:700; }
-    .btn-hold { background:#10b981; color:#fff; border:none; padding:.5rem; border-radius:.5rem; font-weight:700; }
-
-    /* footer love hover like screenshot */
-    footer {
-      padding: .6rem 1rem;
-      text-align:center;
-      font-size:.95rem;
-      color:#374151;
-    }
-    .love-hover {
-      position: relative;
-      display:inline-block;
-      margin:0 .25rem;
-    }
-    .love-hover .love-bubble {
-      position: absolute;
-      bottom: 140%;
-      left: 50%;
-      transform: translateX(-50%) translateY(6px);
-      background: #ffcdd2; /* soft pink */
-      color: #111;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-weight:700;
-      font-size:.85rem;
-      opacity: 0;
-      transition: opacity .25s ease, transform .25s ease;
-      pointer-events:none;
-      white-space:nowrap;
-    }
-    .love-hover:hover .love-bubble {
-      opacity:1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* responsive tweaks */
-    @media (max-width: 576px){
-      .fan-container { width: 200px; height: 200px; }
-      .blade{ width:75px; height:18px; }
-      .fan-motor{ width:50px; height:50px;}
-      .popup { width: 200px; top: -100px; }
-    }
-    .github-support-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
+/* GitHub button */
+.github-support-btn {
   border-radius: 30px;
   padding: 8px 14px;
   font-size: 14px;
   transition: all 0.3s ease;
 }
-
 .github-support-btn:hover {
-  background-color: #333;
+  background-color: #333 !important;
   transform: scale(1.05);
 }
 
-@media (min-width: 768px) {
-  .github-support-btn {
-    position: static;
-    display: inline-block;
-    margin-left: 8px;
-  }
+/* Responsive */
+@media (max-width: 576px){
+  .fan-container { width: 200px; height: 200px; }
+  .blade{ width:75px; height:18px; }
+  .fan-motor{ width:50px; height:50px;}
+  .popup { width: 200px; top: -100px; }
 }
