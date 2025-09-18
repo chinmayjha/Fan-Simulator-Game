@@ -132,6 +132,22 @@ footer { font-size:.95rem; color:#374151; }
   opacity:1;
   transform: translateX(-50%) translateY(0);
 }
+.chinmay-link {
+  background: linear-gradient(90deg, #a855f7, #ec4899, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  transition: background-position 0.5s ease;
+  text-decoration: none;
+}
+.chinmay-link:hover,
+.chinmay-link:focus,
+.chinmay-link:active{
+  background-position: right center;
+  -webkit-text-fill-color:transparent !important;
+  text-decoration:none !important;
+  filter:none !important;
+}
 
 /* GitHub button */
 .github-support-btn {
@@ -152,3 +168,4 @@ footer { font-size:.95rem; color:#374151; }
   .fan-motor{ width:50px; height:50px;}
   .popup { width: 200px; top: -100px; }
 }
+
